@@ -4,6 +4,7 @@ import axios from "axios";
 
 const App: React.FC = () => {
   const [address, setAddress] = useState<string>("");
+  const [loading, setLoading] = useState<Boolean>(false);
   const [contractAddress, setContractAddress] = useState<string>(
     "0xa7f551FEAb03D1F34138c900e7C08821F3C3d1d0"
   );
@@ -11,12 +12,15 @@ const App: React.FC = () => {
 
   const handleFetchNFTs = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:3001/api/nft/${address}/${contractAddress}`
       );
       setNfts(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching NFTs", error);
+      setLoading(false);
     }
   };
 
@@ -47,7 +51,7 @@ const App: React.FC = () => {
       <button type="submit" onClick={handleFetchNFTs}>
         Fetch NFTs
       </button>
-      <NFTList nfts={nfts} />
+      <NFTList nfts={nfts} loading={loading} />
     </div>
   );
 };

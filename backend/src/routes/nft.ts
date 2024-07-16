@@ -16,8 +16,21 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
     //console.log(url);
 
     const response = await axios.get(url);
-    //console.log(response);
-    res.json(response.data?.ownedNfts);
+
+    // strip and format data a little bit
+
+    let ownedNfts = response.data?.ownedNfts;
+    ownedNfts = ownedNfts.map((nft: any) => {
+      const formattedObj = {
+        tokenId: nft.tokenId,
+        name: nft.name,
+        image: nft.image,
+        traits: nft.raw?.metadata?.attributes,
+      };
+      return formattedObj;
+    });
+
+    res.json(ownedNfts);
   } catch (error) {
     res.status(500).send("Error fetching NFT data");
   }
