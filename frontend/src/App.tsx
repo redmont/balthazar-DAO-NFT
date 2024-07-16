@@ -8,6 +8,7 @@ const testWallet = `0xcb415344Cd0fC552CE7B48EE9375991Ff5865895`;
 const App: React.FC = () => {
   const [address, setAddress] = useState<string>(testWallet);
   const [loading, setLoading] = useState<Boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const [contractAddress, setContractAddress] = useState<string>(
     pudgyPenguinContractAddress
@@ -22,8 +23,10 @@ const App: React.FC = () => {
       );
       setNfts(response.data);
       setLoading(false);
+      setError("");
     } catch (error) {
       console.error("Error fetching NFTs", error);
+      setError("Error fetching NFTs Data");
       setLoading(false);
     }
   };
@@ -54,7 +57,7 @@ const App: React.FC = () => {
       <button type="submit" onClick={handleFetchNFTs}>
         Fetch NFTs
       </button>
-      <NFTList nfts={nfts} loading={loading} />
+      <NFTList nfts={nfts} loading={loading} error={error} />
     </div>
   );
 };

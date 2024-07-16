@@ -15,11 +15,15 @@ interface NFT {
 interface NFTListProps {
   nfts: NFT[];
   loading: Boolean;
+  error: string;
 }
 
-const NFTList: React.FC<NFTListProps> = ({ nfts, loading }) => {
+const NFTList: React.FC<NFTListProps> = ({ nfts, loading, error }) => {
   if (loading) {
     return <div style={{ padding: 100 }}>{"Loading ..."}</div>;
+  }
+  if (error) {
+    return <div style={{ padding: 100 }}>{error}</div>;
   }
   return (
     <ul
