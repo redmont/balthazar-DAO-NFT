@@ -1,10 +1,27 @@
 import { Router } from "express";
 import axios from "axios";
+import { createClient } from "redis";
+
 import "dotenv/config";
 const router = Router();
+//const client = createClient();
+let redisSupport = Boolean(process.env.REDIS_SUPPORT);
 
 router.get("/:ownerAddress/:filterContract", async (req, res) => {
+  const redisClient = (global as any).redisClient;
+
   const { ownerAddress, filterContract } = req.params;
+  const cacheKey = `nft:${ownerAddress}:${filterContract}`;
+
+  if (redisSupport && redisClient) {
+    const value = await redisClient.get(cacheKey);
+    if (value) {
+      console.log(`Serving from cache: ${cacheKey}`);
+      res.json(JSON.parse(value));
+      return;
+    }
+  }
+
   try {
     const options = { method: "GET", headers: { accept: "application/json" } };
 
@@ -18,7 +35,6 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
     const response = await axios.get(url);
 
     // strip and format data a little bit
-
     let ownedNfts = response.data?.ownedNfts;
     ownedNfts = ownedNfts.map((nft: any) => {
       const formattedObj = {
@@ -29,6 +45,15 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
       };
       return formattedObj;
     });
+
+    // Caching
+    if (redisSupport && redisClient) {
+      await redisClient.set(
+        cacheKey,
+        JSON.stringify(ownedNfts),
+        { EX: 60 * 60 } // Expire in 1 hours
+      );
+    }
 
     res.json(ownedNfts);
   } catch (error) {
