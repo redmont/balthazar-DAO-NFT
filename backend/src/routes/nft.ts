@@ -1,6 +1,6 @@
 import { Router } from "express";
 import axios from "axios";
-
+import "dotenv/config";
 const router = Router();
 
 router.get("/:ownerAddress/:filterContract", async (req, res) => {
@@ -9,7 +9,7 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
     const options = { method: "GET", headers: { accept: "application/json" } };
 
     const alchemyURL = `https://eth-mainnet.g.alchemy.com/nft/v3`;
-    const alchemyAPIKey = `YOGCFao8H1mCzIieh2VXMR7lFtgAI_lj`;
+    const alchemyAPIKey = process.env.ALCHEMY_KEY;
     const NFTContractAddress = filterContract;
 
     const url = `${alchemyURL}/${alchemyAPIKey}/getNFTsForOwner?owner=${ownerAddress}&contractAddresses[]=${NFTContractAddress}&withMetadata=true&pageSize=100`;
