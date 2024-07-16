@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [contractAddress, setContractAddress] = useState<string>(
     pudgyPenguinContractAddress
   );
-  const [nfts, setNfts] = useState<any[]>([{}]);
+  const [results, setResult] = useState<any>({ nfts: [], cache: false });
 
   const handleFetchNFTs = async () => {
     try {
@@ -21,7 +21,7 @@ const App: React.FC = () => {
       const response = await axios.get(
         `http://localhost:3001/api/nft/${address}/${contractAddress}`
       );
-      setNfts(response.data);
+      setResult(response.data);
       setLoading(false);
       setError("");
     } catch (error) {
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       <button type="submit" onClick={handleFetchNFTs}>
         Fetch NFTs
       </button>
-      <NFTList nfts={nfts} loading={loading} error={error} />
+      <NFTList result={results} loading={loading} error={error} />
     </div>
   );
 };

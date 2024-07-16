@@ -17,7 +17,8 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
     const value = await redisClient.get(cacheKey);
     if (value) {
       console.log(`Serving from cache: ${cacheKey}`);
-      res.json(JSON.parse(value));
+      const cacheRes = { cache: true, nfts: JSON.parse(value) };
+      res.json(cacheRes);
       return;
     }
   }
@@ -55,7 +56,7 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
       );
     }
 
-    res.json(ownedNfts);
+    res.json({ cache: false, nfts: ownedNfts });
   } catch (error) {
     res.status(500).send("Error fetching NFT data");
   }
