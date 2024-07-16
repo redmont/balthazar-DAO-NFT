@@ -28,10 +28,11 @@ const NFTList: React.FC<NFTListProps> = ({ nfts, loading }) => {
         placeContent: "center",
         flexDirection: "row",
         flexWrap: "wrap",
+        padding: 0,
       }}
     >
       {nfts.length === 0 ? (
-        <p>No NFTs found</p>
+        <div>No NFTs found</div>
       ) : (
         nfts.map((nft) => (
           <li
@@ -42,13 +43,13 @@ const NFTList: React.FC<NFTListProps> = ({ nfts, loading }) => {
             }}
           >
             <div>
-              <img src={nft.image.thumbnailUrl} alt={nft.name} />
+              <img src={nft.image?.thumbnailUrl} alt={nft.name} />
             </div>
             <div>
               <h3>{nft.name}</h3>
-              <p>ID: {nft.tokenId}</p>
+              <p>{nft.tokenId && `ID: ${nft.tokenId}`}</p>
               <div>
-                {nft.traits.map((trait) => {
+                {nft.traits?.map((trait) => {
                   return (
                     <div style={{ textTransform: "capitalize", padding: 3 }}>
                       {trait.trait_type}: {trait.value}

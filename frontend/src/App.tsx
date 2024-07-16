@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import NFTList from "./components/NFTList";
 import axios from "axios";
 
+const pudgyPenguinContractAddress = `0xbd3531da5cf5857e7cfaa92426877b022e612cf8`;
+const testWallet = `0xcb415344Cd0fC552CE7B48EE9375991Ff5865895`;
+
 const App: React.FC = () => {
-  const [address, setAddress] = useState<string>("");
+  const [address, setAddress] = useState<string>(testWallet);
   const [loading, setLoading] = useState<Boolean>(false);
+
   const [contractAddress, setContractAddress] = useState<string>(
-    "0xa7f551FEAb03D1F34138c900e7C08821F3C3d1d0"
+    pudgyPenguinContractAddress
   );
-  const [nfts, setNfts] = useState<any[]>([]);
+  const [nfts, setNfts] = useState<any[]>([{}]);
 
   const handleFetchNFTs = async () => {
     try {
@@ -44,7 +48,6 @@ const App: React.FC = () => {
           value={contractAddress}
           onChange={(e) => setContractAddress(e.target.value)}
           placeholder="NFT Contract Address"
-          defaultValue={"0xa7f551FEAb03D1F34138c900e7C08821F3C3d1d0"}
         />
       </div>
       <br></br>
