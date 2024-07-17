@@ -19,7 +19,7 @@ const App: React.FC = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/api/nft/${address}/${contractAddress}`
+        `http://51.20.32.123:3001/api/nft/${address}/${contractAddress}`
       );
       setResult(response.data);
       setLoading(false);
