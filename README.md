@@ -2,8 +2,25 @@
 
 A simple web application that allows users to enter an Ethereum wallet address and displays a list of Pudgy Penguins NFTs (or any other) held by that address.
 
+# EC2 Deployment
+
+Deployed and script running via systemctl
+
+- Frontend Interface:
+  [http://ec2-51-20-64-205.eu-north-1.compute.amazonaws.com:3000/]
+
+- Backend API:
+  [http://ec2-51-20-64-205.eu-north-1.compute.amazonaws.com:3001/api/nft/0x00000E8C78e461678E455b1f6878Bb0ce50ce587/0xa7f551FEAb03D1F34138c900e7C08821F3C3d1d0]
+
 ![Logo](./Snapshot.png)
 
+# Architecture Diagram
+
+- This architecture is intended to optimise the response for end users.
+- Reduces external third-party HTTP API calls by using Redis caching Layer.
+- An invalidation worker microservice which monitors on-chain events (via websocket) and invalidates a cache if NFT Transfer event is detected for a wallet.
+
+![Logo](./Architecture.png)
 
 # Technologies Used
 
