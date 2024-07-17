@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [contractAddress, setContractAddress] = useState<string>(
     pudgyPenguinContractAddress
   );
-  const [results, setResult] = useState<any>({ nfts: [], cache: false });
+  const [results, setResult] = useState<any>({ nfts: [{}], cache: Number(3) });
 
   const handleFetchNFTs = async () => {
     try {

@@ -32,7 +32,9 @@ const NFTList: React.FC<NFTListProps> = ({ result, loading, error }) => {
   }
   return (
     <div>
-      <p>{`Data served from ${cache ? `Redis Cache` : `Alchemy API`}`}</p>
+      {typeof cache == "boolean" && (
+        <p>{`Data served from ${cache ? `Redis Cache` : `Alchemy API`}`}</p>
+      )}
       <ul
         style={{
           display: "flex",
