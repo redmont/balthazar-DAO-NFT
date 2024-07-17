@@ -52,7 +52,7 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
       await redisClient.set(
         cacheKey,
         JSON.stringify(ownedNfts),
-        { EX: 60 * 60 } // Expire in 1 hours
+        { EX: 60 } // Expire in 60 seconds
       );
     }
 
