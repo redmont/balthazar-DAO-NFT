@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import NFTList from "./components/NFTList";
 import axios from "axios";
 
-const pudgyPenguinContractAddress = `0xbd3531da5cf5857e7cfaa92426877b022e612cf8`;
-const testWallet = `0xcb415344Cd0fC552CE7B48EE9375991Ff5865895`;
+const pudgyPenguinContractAddress =
+  process.env.TEST_CONTRACT || `0xbd3531da5cf5857e7cfaa92426877b022e612cf8`;
+const testWallet =
+  process.env.TEST_WALLET || `0xcb415344Cd0fC552CE7B48EE9375991Ff5865895`;
+const apiServer = process.env.API_SERVER || `http://localhost:3001`;
 
 const App: React.FC = () => {
   const [address, setAddress] = useState<string>(testWallet);
@@ -13,13 +16,13 @@ const App: React.FC = () => {
   const [contractAddress, setContractAddress] = useState<string>(
     pudgyPenguinContractAddress
   );
-  const [results, setResult] = useState<any>({ nfts: [{}], cache: Number(3) });
+  const [results, setResult] = useState<any>({ nfts: [{}], cache: 3 });
 
   const handleFetchNFTs = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://51.20.32.123:3001/api/nft/${address}/${contractAddress}`
+        `${apiServer}/api/nft/${address}/${contractAddress}`
       );
       setResult(response.data);
       setLoading(false);

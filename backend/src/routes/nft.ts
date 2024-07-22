@@ -1,30 +1,26 @@
 import { Router } from "express";
 import axios from "axios";
-import { createClient } from "redis";
 
 import "dotenv/config";
 const router = Router();
-//const client = createClient();
 let redisSupport = Boolean(process.env.REDIS_SUPPORT);
 
 router.get("/:ownerAddress/:filterContract", async (req, res) => {
-  const redisClient = (global as any).redisClient;
-
-  const { ownerAddress, filterContract } = req.params;
-  const cacheKey = `nft:${ownerAddress}:${filterContract}`;
-
-  if (redisSupport && redisClient) {
-    const value = await redisClient.get(cacheKey);
-    if (value) {
-      console.log(`Serving from cache: ${cacheKey}`);
-      const cacheRes = { cache: true, nfts: JSON.parse(value) };
-      res.json(cacheRes);
-      return;
-    }
-  }
-
   try {
-    const options = { method: "GET", headers: { accept: "application/json" } };
+    const redisClient = (global as any).redisClient;
+
+    const { ownerAddress, filterContract } = req.params;
+    const cacheKey = `nft:${ownerAddress}:${filterContract}`;
+
+    if (redisSupport && redisClient) {
+      const value = await redisClient.get(cacheKey);
+      if (value) {
+        console.log(`Serving from cache: ${cacheKey}`);
+        const cacheRes = { cache: true, nfts: JSON.parse(value) };
+        res.json(cacheRes);
+        return;
+      }
+    }
 
     const alchemyURL = `https://eth-mainnet.g.alchemy.com/nft/v3`;
     const alchemyAPIKey = process.env.ALCHEMY_KEY;
@@ -52,7 +48,7 @@ router.get("/:ownerAddress/:filterContract", async (req, res) => {
       await redisClient.set(
         cacheKey,
         JSON.stringify(ownedNfts),
-        { EX: 60 } // Expire in 60 seconds
+        { EX: process.env.CACHE_EXPIRATION || 60 } // Expire in 60 seconds
       );
     }
 
